@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="PENDING ORDERS"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_shopping_cart"
+        android:id="@+id/shop"
+        android:enabled="true"
+        />
+
+    <item
+        android:title="COMPLETED ORDERS"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_order"
+        android:id="@+id/fodkart"
+        android:enabled="true"
+        />
+
+
+</menu>

@@ -93,9 +93,9 @@ public class Login extends AppCompatActivity {
                                         startActivity(i);
                                         finishAffinity();
                                     } else {
-                                        /*Intent i = new Intent(Login.this, MainActivity2.class);
+                                        Intent i = new Intent(Login.this, MainActivity2.class);
                                         startActivity(i);
-                                        finishAffinity();*/
+                                        finishAffinity();
                                     }
 
 

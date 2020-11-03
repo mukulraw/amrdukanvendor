@@ -47,9 +47,19 @@ public class Splash extends AppCompatActivity {
                 final String uid = SharePreferenceUtils.getInstance().getString("id");
 
                 if (uid.length() > 0) {
-                    Intent intent = new Intent(Splash.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+
+                    final String type = SharePreferenceUtils.getInstance().getString("type");
+
+                    if (type.equals("admin")) {
+                        Intent i = new Intent(Splash.this, MainActivity.class);
+                        startActivity(i);
+                        finishAffinity();
+                    } else {
+                        Intent i = new Intent(Splash.this, MainActivity2.class);
+                        startActivity(i);
+                        finishAffinity();
+                    }
+
                 } else {
                     Intent intent = new Intent(Splash.this, Login.class);
                     startActivity(intent);

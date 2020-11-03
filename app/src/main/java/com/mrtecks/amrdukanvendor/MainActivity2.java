@@ -20,12 +20,9 @@ import android.widget.ImageButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.installations.FirebaseInstallations;
 
-import java.io.IOException;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity2 extends AppCompatActivity {
 
     Toolbar toolbar;
     BottomNavigationView bottom;
@@ -34,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
         toolbar = findViewById(R.id.toolbar);
         bottom = findViewById(R.id.bottom);
@@ -72,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         FragmentTransaction ft1 = fm1.beginTransaction();
-                        FoodOrders frag11 = new FoodOrders();
+                        ShopOrders frag11 = new ShopOrders();
                         ft1.replace(R.id.replace, frag11);
                         //ft.addToBackStack(null);
                         ft1.commit();
@@ -89,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final Dialog dialog = new Dialog(MainActivity.this);
+                final Dialog dialog = new Dialog(MainActivity2.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(false);
                 dialog.setContentView(R.layout.logout_dialog);
@@ -125,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
                         SharePreferenceUtils.getInstance().deletePref();
 
-                        Intent intent = new Intent(MainActivity.this , Splash.class);
+                        Intent intent = new Intent(MainActivity2.this , Splash.class);
                         startActivity(intent);
 
                         finishAffinity();

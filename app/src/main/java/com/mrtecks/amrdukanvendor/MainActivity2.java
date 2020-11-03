@@ -55,7 +55,7 @@ public class MainActivity2 extends AppCompatActivity {
                         }
 
                         FragmentTransaction ft = fm.beginTransaction();
-                        ShopOrders frag1 = new ShopOrders();
+                        Orders31 frag1 = new Orders31();
                         ft.replace(R.id.replace, frag1);
                         //ft.addToBackStack(null);
                         ft.commit();
@@ -69,7 +69,7 @@ public class MainActivity2 extends AppCompatActivity {
                         }
 
                         FragmentTransaction ft1 = fm1.beginTransaction();
-                        ShopOrders frag11 = new ShopOrders();
+                        Orders41 frag11 = new Orders41();
                         ft1.replace(R.id.replace, frag11);
                         //ft.addToBackStack(null);
                         ft1.commit();

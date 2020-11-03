@@ -52,6 +52,19 @@ public interface AllApiIneterface {
             @Part("order_id") String order_id
     );
 
+    @Multipart
+    @POST("amrdukan/api/getFoodPending2.php")
+    Call<ordersBean> getFoodPending2(
+            @Part("id") String id
+    );
+
+    @Multipart
+    @POST("amrdukan/api/getFoodCompleted2.php")
+    Call<ordersBean> getFoodCompleted2(
+            @Part("date") String date,
+            @Part("id") String id
+    );
+
     /*@Multipart
     @POST("amrdukan/api/getHome.php")
     Call<homeBean> getHome(@Part("user_id") String user_id);

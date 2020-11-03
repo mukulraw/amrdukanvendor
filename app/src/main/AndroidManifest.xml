@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AmrDukanVendor">
-        <activity android:name=".OrderDetails"></activity>
+        <activity android:name=".OrderDetails"/>
         <activity android:name=".Login" />
         <activity android:name=".Splash">
             <intent-filter>

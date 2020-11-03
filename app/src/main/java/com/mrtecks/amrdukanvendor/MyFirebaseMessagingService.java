@@ -28,10 +28,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String s) {
 
-        SharePreferenceUtils.getInstance().saveString("token" , s);
+        SharePreferenceUtils.getInstance().saveString("token", s);
 
-        Log.d("toekn" , s);
-
+        Log.d("toekn", s);
 
 
         super.onNewToken(s);
@@ -40,7 +39,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        Log.d("asdasd" , remoteMessage.getData().toString());
+        Log.d("asdasd", remoteMessage.getData().toString());
 
         Intent registrationComplete = new Intent("count");
 
@@ -61,7 +60,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void handleNotification(String message) {
 
         Log.d("notificationData", message);
-        String idChannel = "amrdukan messages";
+        String idChannel = "southman messages";
         Intent mainIntent;
 
         mainIntent = new Intent(Bean.getContext(), Splash.class);
@@ -77,8 +76,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationCompat.Builder builder;
 
-        if (isAppRunning(this))
-        {
+        if (isAppRunning(this)) {
             builder = new NotificationCompat.Builder(Bean.getContext(), idChannel);
             builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
                     .setSmallIcon(R.drawable.logo)
@@ -87,9 +85,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(Html.fromHtml(message)))
                     .setContentText(Html.fromHtml(message));
-        }
-        else
-        {
+        } else {
             builder = new NotificationCompat.Builder(Bean.getContext(), idChannel);
             builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
                     .setSmallIcon(R.drawable.logo)
@@ -140,5 +136,4 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         return false;
     }
-
 }

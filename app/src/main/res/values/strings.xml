@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AmrDukan Vendor</string>
+    <string name="alarm_notification">alarm notification</string>
+    <string name="default_notification_channel_id">123</string>
+</resources>

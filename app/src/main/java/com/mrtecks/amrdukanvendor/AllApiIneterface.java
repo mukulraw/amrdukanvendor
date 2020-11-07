@@ -1,6 +1,7 @@
 package com.mrtecks.amrdukanvendor;
 
 
+import com.mrtecks.amrdukanvendor.driverPOJO.driverBean;
 import com.mrtecks.amrdukanvendor.loginPOJO.loginBean;
 import com.mrtecks.amrdukanvendor.orderDetailsPOJO.orderDetailsBean;
 import com.mrtecks.amrdukanvendor.ordersPOJO.ordersBean;
@@ -63,6 +64,19 @@ public interface AllApiIneterface {
     Call<ordersBean> getFoodCompleted2(
             @Part("date") String date,
             @Part("id") String id
+    );
+
+    @Multipart
+    @POST("amrdukan/api/getDrivers.php")
+    Call<driverBean> getDrivers(
+            @Part("id") String id
+    );
+
+    @Multipart
+    @POST("amrdukan/api/assign_order.php")
+    Call<driverBean> assign_order(
+            @Part("driver_id") String driver_id,
+            @Part("order_id") String order_id
     );
 
     /*@Multipart

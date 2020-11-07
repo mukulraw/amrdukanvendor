@@ -174,8 +174,9 @@ public class Orders31 extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(context , OrderDetails2.class);
+                    Intent intent = new Intent(context , OrderDetails3.class);
                     intent.putExtra("oid" , item.getId());
+                    intent.putExtra("status" , item.getStatus());
                     startActivity(intent);
 
                 }

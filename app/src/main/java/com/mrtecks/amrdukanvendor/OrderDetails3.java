@@ -86,7 +86,7 @@ public class OrderDetails3 extends AppCompatActivity {
         grid.setAdapter(adapter);
         grid.setLayoutManager(manager);
 
-        if (status.equals("pending")) {
+        if (status.equals("preparing")) {
             assign.setVisibility(View.VISIBLE);
         } else {
             assign.setVisibility(View.GONE);

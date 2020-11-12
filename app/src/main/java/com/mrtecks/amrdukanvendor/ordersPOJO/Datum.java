@@ -47,6 +47,9 @@ public class Datum {
     @SerializedName("phone")
     @Expose
     private String phone;
+    @SerializedName("current")
+    @Expose
+    private String current;
 
     public String getId() {
         return id;
@@ -158,5 +161,13 @@ public class Datum {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(String current) {
+        this.current = current;
     }
 }

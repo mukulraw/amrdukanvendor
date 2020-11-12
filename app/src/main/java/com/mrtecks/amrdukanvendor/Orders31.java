@@ -3,6 +3,7 @@ package com.mrtecks.amrdukanvendor;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mrtecks.amrdukanvendor.ordersPOJO.Datum;
 import com.mrtecks.amrdukanvendor.ordersPOJO.ordersBean;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -145,7 +150,7 @@ public class Orders31 extends Fragment {
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View view = inflater.inflate(R.layout.order_list_item2, viewGroup, false);
+            View view = inflater.inflate(R.layout.order_list_item3, viewGroup, false);
 
             return new ViewHolder(view);
         }
@@ -170,6 +175,59 @@ public class Orders31 extends Fragment {
 
             viewHolder.deldate.setText(item.getDelivery_date());
 
+            String dateString = item.getCreated();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Date date = null;
+            try {
+                date = sdf.parse(dateString);
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                calendar.add(Calendar.MINUTE, 45);
+
+                Date date1 = sdf.parse(item.getCurrent());
+
+                Calendar calendar2 = Calendar.getInstance();
+                calendar2.setTime(date1);
+
+                Date startDate = calendar.getTime();
+
+                Date currentTime = calendar2.getTime();
+
+                //long diffInMs = currentTime.getTime() - startDate.getTime();
+                long diffInMs = startDate.getTime() - currentTime.getTime();
+
+
+                if (diffInMs > 0) {
+
+                    Log.d("ms1", String.valueOf(startDate.getTime()));
+                    Log.d("ms", String.valueOf(currentTime.getTime()));
+
+
+                    long diffInSec = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
+
+                    CountDownTimer timer = new CountDownTimer(diffInMs, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            viewHolder.countdown.setText(convertSecondsToHMmSs(millisUntilFinished / 1000));
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                        }
+                    };
+
+                    timer.start();
+                } else {
+                    viewHolder.countdown.setText("---");
+                }
+
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -185,13 +243,20 @@ public class Orders31 extends Fragment {
 
         }
 
+        public String convertSecondsToHMmSs(long seconds) {
+            long s = seconds % 60;
+            long m = (seconds / 60) % 60;
+            long h = (seconds / (60 * 60)) % 24;
+            return String.format("%02d:%02d", m, s);
+        }
+
         @Override
         public int getItemCount() {
             return list.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView txn, date, status, name, address, amount, pay, slot, deldate, phone;
+            TextView txn, date, status, name, address, amount, pay, slot, deldate, phone, countdown;
 
 
             ViewHolder(@NonNull View itemView) {
@@ -207,6 +272,7 @@ public class Orders31 extends Fragment {
                 slot = itemView.findViewById(R.id.textView62);
                 deldate = itemView.findViewById(R.id.textView42);
                 phone = itemView.findViewById(R.id.textView5);
+                countdown = itemView.findViewById(R.id.textView8);
 
 
             }

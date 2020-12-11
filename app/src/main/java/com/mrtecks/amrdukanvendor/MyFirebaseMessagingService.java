@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.net.Uri;
 import android.os.Build;
 import android.text.Html;
 import android.util.Log;
@@ -81,6 +83,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
                     .setSmallIcon(R.drawable.logo)
                     .setAutoCancel(true)
+                    .setSound(Uri.parse("android.resource://"
+                            + getPackageName() + "/" + R.raw.sound))
                     .setContentIntent(pendingIntent)
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(Html.fromHtml(message)))
@@ -90,6 +94,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
                     .setSmallIcon(R.drawable.logo)
                     .setContentIntent(pendingIntent)
+                    .setSound(Uri.parse("android.resource://"
+                            + getPackageName() + "/" + R.raw.sound))
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(Html.fromHtml(message)))
                     .setAutoCancel(true)
@@ -97,10 +103,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            Uri soundUri = Uri.parse(
+                    "android.resource://" +
+                            getApplicationContext().getPackageName() +
+                            "/" +
+                            R.raw.sound);
+
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .build();
+
             mChannel = new NotificationChannel(idChannel, Bean.getContext().getString(R.string.app_name), importance);
             // Configure the notification channel.
             mChannel.setDescription(Bean.getContext().getString(R.string.alarm_notification));
             mChannel.enableLights(true);
+            mChannel.setSound(soundUri, audioAttributes);
             mChannel.setLightColor(Color.RED);
             mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
             if (mNotificationManager != null) {
@@ -110,8 +129,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setColor(ContextCompat.getColor(Bean.getContext(), R.color.transparent))
-                    .setVibrate(new long[]{100, 250})
+                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
                     .setLights(Color.YELLOW, 500, 5000)
+                    .setSound(Uri.parse("android.resource://"
+                            + getPackageName() + "/" + R.raw.sound))
                     .setAutoCancel(true);
         }
         if (mNotificationManager != null) {

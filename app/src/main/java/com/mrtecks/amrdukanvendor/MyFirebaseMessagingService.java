@@ -86,8 +86,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
                     .setSmallIcon(R.drawable.logo)
                     .setAutoCancel(true)
-                    //.setSound(Uri.parse("android.resource://"
-                    //        + getPackageName() + "/" + R.raw.sound))
+                    .setSound(Uri.parse("android.resource://"
+                            + getPackageName() + "/" + R.raw.sound))
                     .setContentIntent(pendingIntent)
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(Html.fromHtml(message)))
@@ -97,8 +97,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
                     .setSmallIcon(R.drawable.logo)
                     .setContentIntent(pendingIntent)
-                    //.setSound(Uri.parse("android.resource://"
-                    //        + getPackageName() + "/" + R.raw.sound))
+                    .setSound(Uri.parse("android.resource://"
+                            + getPackageName() + "/" + R.raw.sound))
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(Html.fromHtml(message)))
                     .setAutoCancel(true)
@@ -122,7 +122,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             // Configure the notification channel.
             mChannel.setDescription(Bean.getContext().getString(R.string.alarm_notification));
             mChannel.enableLights(true);
-            //mChannel.setSound(soundUri, audioAttributes);
+            mChannel.setSound(soundUri, audioAttributes);
             mChannel.setLightColor(Color.RED);
             mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
             if (mNotificationManager != null) {
@@ -134,8 +134,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setColor(ContextCompat.getColor(Bean.getContext(), R.color.transparent))
                     .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
                     .setLights(Color.YELLOW, 500, 5000)
-                    //.setSound(Uri.parse("android.resource://"
-                    //        + getPackageName() + "/" + R.raw.sound))
+                    .setSound(Uri.parse("android.resource://"
+                            + getPackageName() + "/" + R.raw.sound))
                     .setAutoCancel(true);
         }
         if (mNotificationManager != null) {

@@ -1,6 +1,7 @@
 package com.mrtecks.amrdukanvendor;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -8,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +20,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -50,7 +54,7 @@ public class OrderDetails3 extends AppCompatActivity {
     List<Datum> list;
     CategoryAdapter adapter;
     String oid, status;
-    Button assign;
+    Button assign, cancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,7 @@ public class OrderDetails3 extends AppCompatActivity {
         grid = findViewById(R.id.grid);
         progress = findViewById(R.id.progressBar2);
         assign = findViewById(R.id.button3);
+        cancel = findViewById(R.id.button6);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -88,109 +93,318 @@ public class OrderDetails3 extends AppCompatActivity {
 
         if (status.equals("preparing")) {
             assign.setVisibility(View.VISIBLE);
+            assign.setText("READY TO PICKUP");
+            cancel.setVisibility(View.GONE);
+        } else if (status.equals("pending")) {
+            assign.setVisibility(View.VISIBLE);
+            assign.setText("ACCEPT ORDER");
+            cancel.setVisibility(View.VISIBLE);
         } else {
             assign.setVisibility(View.GONE);
+            cancel.setVisibility(View.GONE);
         }
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new AlertDialog.Builder(OrderDetails3.this)
+                        .setTitle("Cancel Order")
+                        .setMessage("Are you sure you want to cancel this order?")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, int which) {
+
+                                progress.setVisibility(View.VISIBLE);
+
+                                Bean b = (Bean) getApplicationContext();
+
+                                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                                logging.level(HttpLoggingInterceptor.Level.HEADERS);
+                                logging.level(HttpLoggingInterceptor.Level.BODY);
+
+                                OkHttpClient client = new OkHttpClient.Builder().writeTimeout(1000, TimeUnit.SECONDS).readTimeout(1000, TimeUnit.SECONDS).connectTimeout(1000, TimeUnit.SECONDS).addInterceptor(logging).build();
+
+                                Retrofit retrofit = new Retrofit.Builder()
+                                        .baseUrl(b.baseurl)
+                                        .client(client)
+                                        .addConverterFactory(ScalarsConverterFactory.create())
+                                        .addConverterFactory(GsonConverterFactory.create())
+                                        .build();
+
+                                AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+                                Call<driverBean> call2 = cr.cancel_order2(oid);
+                                call2.enqueue(new Callback<driverBean>() {
+                                    @Override
+                                    public void onResponse(Call<driverBean> call, Response<driverBean> response) {
+                                        progress.setVisibility(View.GONE);
+                                        Toast.makeText(OrderDetails3.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                        dialog.dismiss();
+
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<driverBean> call, Throwable t) {
+                                        progress.setVisibility(View.GONE);
+                                    }
+                                });
+
+                            }
+                        })
+
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+
+            }
+        });
 
         assign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Dialog dialog = new Dialog(OrderDetails3.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setCancelable(true);
-                dialog.setContentView(R.layout.assign_dialog);
-                dialog.show();
+                String text = assign.getText().toString();
 
-                Spinner spinner = dialog.findViewById(R.id.spinner);
-                Button ok = dialog.findViewById(R.id.button5);
-                ProgressBar bar = dialog.findViewById(R.id.progressBar4);
+                if (text.equals("ACCEPT ORDER")) {
 
-                List<String> did = new ArrayList<>();
-                List<String> dname = new ArrayList<>();
-                final String[] drid = new String[1];
-
-                bar.setVisibility(View.VISIBLE);
+                    Dialog dialog = new Dialog(OrderDetails3.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setCancelable(true);
+                    dialog.setContentView(R.layout.accept_dialog);
+                    dialog.show();
 
 
-                Bean b = (Bean) getApplicationContext();
+                    EditText time = dialog.findViewById(R.id.spinner1);
+                    Button ok = dialog.findViewById(R.id.button5);
+                    ProgressBar bar = dialog.findViewById(R.id.progressBar4);
 
-                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-                logging.level(HttpLoggingInterceptor.Level.HEADERS);
-                logging.level(HttpLoggingInterceptor.Level.BODY);
+                    ok.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                OkHttpClient client = new OkHttpClient.Builder().writeTimeout(1000, TimeUnit.SECONDS).readTimeout(1000, TimeUnit.SECONDS).connectTimeout(1000, TimeUnit.SECONDS).addInterceptor(logging).build();
+                            String t = time.getText().toString();
 
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(b.baseurl)
-                        .client(client)
-                        .addConverterFactory(ScalarsConverterFactory.create())
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
+                            if (t.length() > 0) {
+                                int tt = Integer.parseInt(t);
+                                if (tt > 0) {
 
-                AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+                                    bar.setVisibility(View.VISIBLE);
 
-                Call<driverBean> call = cr.getDrivers(SharePreferenceUtils.getInstance().getString("id"));
 
-                call.enqueue(new Callback<driverBean>() {
-                    @Override
-                    public void onResponse(Call<driverBean> call, Response<driverBean> response) {
+                                    Bean b = (Bean) getApplicationContext();
 
-                        for (int i = 0; i < response.body().getData().size(); i++) {
-                            did.add(response.body().getData().get(i).getId());
-                            dname.add(response.body().getData().get(i).getFullName());
+                                    HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                                    logging.level(HttpLoggingInterceptor.Level.HEADERS);
+                                    logging.level(HttpLoggingInterceptor.Level.BODY);
+
+                                    OkHttpClient client = new OkHttpClient.Builder().writeTimeout(1000, TimeUnit.SECONDS).readTimeout(1000, TimeUnit.SECONDS).connectTimeout(1000, TimeUnit.SECONDS).addInterceptor(logging).build();
+
+                                    Retrofit retrofit = new Retrofit.Builder()
+                                            .baseUrl(b.baseurl)
+                                            .client(client)
+                                            .addConverterFactory(ScalarsConverterFactory.create())
+                                            .addConverterFactory(GsonConverterFactory.create())
+                                            .build();
+
+                                    AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+                                    Call<driverBean> call2 = cr.accept_order(oid, t);
+                                    call2.enqueue(new Callback<driverBean>() {
+                                        @Override
+                                        public void onResponse(Call<driverBean> call, Response<driverBean> response) {
+                                            bar.setVisibility(View.GONE);
+                                            Toast.makeText(OrderDetails3.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                            dialog.dismiss();
+
+                                            finish();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<driverBean> call, Throwable t) {
+                                            bar.setVisibility(View.GONE);
+                                        }
+                                    });
+
+                                } else {
+                                    Toast.makeText(OrderDetails3.this, "Invalid minutes to prepare", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(OrderDetails3.this, "Invalid minutes to prepare", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+
+                } else if (text.equals("READY TO PICKUP")) {
+
+
+                    new AlertDialog.Builder(OrderDetails3.this)
+                            .setTitle("Ready to Pickup")
+                            .setMessage("Are you sure you want to ready this order for pickup?")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(final DialogInterface dialog, int which) {
+
+                                    progress.setVisibility(View.VISIBLE);
+
+                                    Bean b = (Bean) getApplicationContext();
+
+                                    HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                                    logging.level(HttpLoggingInterceptor.Level.HEADERS);
+                                    logging.level(HttpLoggingInterceptor.Level.BODY);
+
+                                    OkHttpClient client = new OkHttpClient.Builder().writeTimeout(1000, TimeUnit.SECONDS).readTimeout(1000, TimeUnit.SECONDS).connectTimeout(1000, TimeUnit.SECONDS).addInterceptor(logging).build();
+
+                                    Retrofit retrofit = new Retrofit.Builder()
+                                            .baseUrl(b.baseurl)
+                                            .client(client)
+                                            .addConverterFactory(ScalarsConverterFactory.create())
+                                            .addConverterFactory(GsonConverterFactory.create())
+                                            .build();
+
+                                    AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+                                    Call<driverBean> call2 = cr.assign_order(SharePreferenceUtils.getInstance().getString("id"), oid);
+                                    call2.enqueue(new Callback<driverBean>() {
+                                        @Override
+                                        public void onResponse(Call<driverBean> call, Response<driverBean> response) {
+                                            progress.setVisibility(View.GONE);
+                                            Toast.makeText(OrderDetails3.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                            dialog.dismiss();
+
+                                            finish();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<driverBean> call, Throwable t) {
+                                            progress.setVisibility(View.GONE);
+                                        }
+                                    });
+
+                                }
+                            })
+
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+
+
+                    /*Dialog dialog = new Dialog(OrderDetails3.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setCancelable(true);
+                    dialog.setContentView(R.layout.assign_dialog);
+                    dialog.show();
+
+                    Spinner spinner = dialog.findViewById(R.id.spinner);
+                    Button ok = dialog.findViewById(R.id.button5);
+                    ProgressBar bar = dialog.findViewById(R.id.progressBar4);
+
+                    List<String> did = new ArrayList<>();
+                    List<String> dname = new ArrayList<>();
+                    final String[] drid = new String[1];
+
+                    bar.setVisibility(View.VISIBLE);
+
+
+                    Bean b = (Bean) getApplicationContext();
+
+                    HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                    logging.level(HttpLoggingInterceptor.Level.HEADERS);
+                    logging.level(HttpLoggingInterceptor.Level.BODY);
+
+                    OkHttpClient client = new OkHttpClient.Builder().writeTimeout(1000, TimeUnit.SECONDS).readTimeout(1000, TimeUnit.SECONDS).connectTimeout(1000, TimeUnit.SECONDS).addInterceptor(logging).build();
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(b.baseurl)
+                            .client(client)
+                            .addConverterFactory(ScalarsConverterFactory.create())
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                    AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+                    Call<driverBean> call = cr.getDrivers(SharePreferenceUtils.getInstance().getString("id"));
+
+                    call.enqueue(new Callback<driverBean>() {
+                        @Override
+                        public void onResponse(Call<driverBean> call, Response<driverBean> response) {
+
+                            for (int i = 0; i < response.body().getData().size(); i++) {
+                                did.add(response.body().getData().get(i).getId());
+                                dname.add(response.body().getData().get(i).getFullName());
+                            }
+
+                            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(OrderDetails3.this, android.R.layout.simple_list_item_1, dname);
+                            spinner.setAdapter(dataAdapter);
+
+
+                            bar.setVisibility(View.GONE);
+
                         }
 
-                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(OrderDetails3.this, android.R.layout.simple_list_item_1, dname);
-                        spinner.setAdapter(dataAdapter);
+                        @Override
+                        public void onFailure(Call<driverBean> call, Throwable t) {
+                            bar.setVisibility(View.GONE);
+                        }
+                    });
 
+                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            drid[0] = did.get(position);
+                        }
 
-                        bar.setVisibility(View.GONE);
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
 
-                    }
+                        }
+                    });
 
-                    @Override
-                    public void onFailure(Call<driverBean> call, Throwable t) {
-                        bar.setVisibility(View.GONE);
-                    }
-                });
+                    ok.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        drid[0] = did.get(position);
-                    }
+                            Call<driverBean> call2 = cr.assign_order(drid[0], oid);
+                            call2.enqueue(new Callback<driverBean>() {
+                                @Override
+                                public void onResponse(Call<driverBean> call, Response<driverBean> response) {
+                                    bar.setVisibility(View.GONE);
+                                    Toast.makeText(OrderDetails3.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+                                    dialog.dismiss();
 
-                    }
-                });
+                                    finish();
+                                }
 
-                ok.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                                @Override
+                                public void onFailure(Call<driverBean> call, Throwable t) {
+                                    bar.setVisibility(View.GONE);
+                                }
+                            });
 
-                        Call<driverBean> call2 = cr.assign_order(drid[0], oid);
-                        call2.enqueue(new Callback<driverBean>() {
-                            @Override
-                            public void onResponse(Call<driverBean> call, Response<driverBean> response) {
-                                bar.setVisibility(View.GONE);
-                                Toast.makeText(OrderDetails3.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });*/
+                }
 
-                                dialog.dismiss();
-
-                                finish();
-                            }
-
-                            @Override
-                            public void onFailure(Call<driverBean> call, Throwable t) {
-                                bar.setVisibility(View.GONE);
-                            }
-                        });
-
-                    }
-                });
 
             }
         });

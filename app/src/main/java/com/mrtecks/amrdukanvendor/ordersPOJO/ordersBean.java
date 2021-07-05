@@ -15,6 +15,12 @@ public class ordersBean {
     @SerializedName("data")
     @Expose
     private List<Datum> data = null;
+    @SerializedName("collect")
+    @Expose
+    private String collect;
+    @SerializedName("delivered")
+    @Expose
+    private String delivered;
 
     public String getStatus() {
         return status;
@@ -38,5 +44,21 @@ public class ordersBean {
 
     public void setData(List<Datum> data) {
         this.data = data;
+    }
+
+    public String getCollect() {
+        return collect;
+    }
+
+    public void setCollect(String collect) {
+        this.collect = collect;
+    }
+
+    public String getDelivered() {
+        return delivered;
+    }
+
+    public void setDelivered(String delivered) {
+        this.delivered = delivered;
     }
 }

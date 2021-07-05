@@ -51,6 +51,8 @@ public class Orders41 extends Fragment {
     TextView date;
     String dd;
 
+    TextView ordersamount, cashcollected;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,6 +63,8 @@ public class Orders41 extends Fragment {
         progress = view.findViewById(R.id.progressBar3);
         grid = view.findViewById(R.id.grid);
         date = view.findViewById(R.id.date);
+        cashcollected = view.findViewById(R.id.textView18);
+        ordersamount = view.findViewById(R.id.textView17);
 
 
         adapter = new OrdersAdapter(list, getActivity());
@@ -176,6 +180,9 @@ public class Orders41 extends Fragment {
                     Toast.makeText(mainActivity, "No order found", Toast.LENGTH_SHORT).show();
 */
                 }
+
+                cashcollected.setText("" + response.body().getDelivered());
+                ordersamount.setText("₹ " + response.body().getCollect());
 
                 progress.setVisibility(View.GONE);
 

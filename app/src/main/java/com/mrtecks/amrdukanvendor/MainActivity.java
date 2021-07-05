@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        FirebaseInstallations.getInstance().delete()
+                        /*FirebaseInstallations.getInstance().delete()
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                                             Log.e("Installations", "Unable to delete Installation");
                                         }
                                     }
-                                });
+                                });*/
 
 
                         SharePreferenceUtils.getInstance().deletePref();

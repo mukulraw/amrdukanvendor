@@ -50,6 +50,9 @@ public class Datum {
     @SerializedName("current")
     @Expose
     private String current;
+    @SerializedName("time_to_prepare")
+    @Expose
+    private String time_to_prepare;
 
     public String getId() {
         return id;
@@ -169,5 +172,13 @@ public class Datum {
 
     public void setCurrent(String current) {
         this.current = current;
+    }
+
+    public String getTime_to_prepare() {
+        return time_to_prepare;
+    }
+
+    public void setTime_to_prepare(String time_to_prepare) {
+        this.time_to_prepare = time_to_prepare;
     }
 }

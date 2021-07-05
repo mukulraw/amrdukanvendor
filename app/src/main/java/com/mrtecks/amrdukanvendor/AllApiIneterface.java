@@ -75,7 +75,20 @@ public interface AllApiIneterface {
     @Multipart
     @POST("amrdukan/api/assign_order.php")
     Call<driverBean> assign_order(
-            @Part("driver_id") String driver_id,
+            @Part("id") String id,
+            @Part("order_id") String order_id
+    );
+
+    @Multipart
+    @POST("amrdukan/api/accept_order.php")
+    Call<driverBean> accept_order(
+            @Part("order_id") String order_id,
+            @Part("time_to_prepare") String time_to_prepare
+    );
+
+    @Multipart
+    @POST("amrdukan/api/cancel_order2.php")
+    Call<driverBean> cancel_order2(
             @Part("order_id") String order_id
     );
 

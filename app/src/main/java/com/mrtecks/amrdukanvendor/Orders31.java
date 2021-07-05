@@ -1,7 +1,9 @@
 package com.mrtecks.amrdukanvendor;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -14,11 +16,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mrtecks.amrdukanvendor.ordersPOJO.Datum;
 import com.mrtecks.amrdukanvendor.ordersPOJO.ordersBean;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,7 +43,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class Orders31 extends Fragment {
+public class Orders31 extends Fragment{
 
     ProgressBar progress;
     RecyclerView grid;
@@ -45,6 +51,16 @@ public class Orders31 extends Fragment {
     GridLayoutManager manager;
 
     List<Datum> list;
+    LocalBroadcastManager bm;
+
+    @Override
+    public void onAttach(@NotNull Context context) {
+        super.onAttach(context);
+        bm = LocalBroadcastManager.getInstance(context);
+        IntentFilter actionReceiver = new IntentFilter();
+        actionReceiver.addAction("cancelintent");
+        bm.registerReceiver(onJsonReceived , actionReceiver);
+    }
 
     @Nullable
     @Override
@@ -73,6 +89,22 @@ public class Orders31 extends Fragment {
 
         loadCart();
 
+    }
+
+    private final BroadcastReceiver onJsonReceived = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                Log.d("cancel", "called");
+                loadCart();
+            }
+        }
+    };
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        bm.unregisterReceiver(onJsonReceived);
     }
 
     void loadCart() {
@@ -127,6 +159,12 @@ public class Orders31 extends Fragment {
 
     }
 
+    /*@Override
+    public void oncancel() {
+        Log.d("cancel", "called");
+        loadCart();
+    }*/
+
     class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
 
         List<Datum> list = new ArrayList<>();
@@ -157,10 +195,9 @@ public class Orders31 extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i1) {
+            viewHolder.setIsRecyclable(false);
 
             final Datum item = list.get(i1);
-
-            //viewHolder.setIsRecyclable(false);
 
 
             viewHolder.txn.setText("#" + item.getTxn());
@@ -181,9 +218,22 @@ public class Orders31 extends Fragment {
             try {
                 date = sdf.parse(dateString);
 
+
+
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
-                calendar.add(Calendar.MINUTE, 45);
+
+                if (item.getTime_to_prepare().length() > 0)
+                {
+                    int tt = Integer.parseInt(item.getTime_to_prepare());
+                    calendar.add(Calendar.MINUTE, tt);
+                }
+                else
+                {
+                    calendar.add(Calendar.MINUTE, 2);
+                }
+
+                //calendar.add(Calendar.MINUTE, 45);
 
                 Date date1 = sdf.parse(item.getCurrent());
 

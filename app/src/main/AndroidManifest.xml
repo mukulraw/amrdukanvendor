@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AmrDukanVendor">
-        <activity android:name=".OrderDetails3"></activity>
+        <activity android:name=".OrderDetails3"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".OrderDetails2"
             android:screenOrientation="portrait" />

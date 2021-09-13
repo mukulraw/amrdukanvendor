@@ -92,6 +92,11 @@ public class Login extends AppCompatActivity {
                                         Intent i = new Intent(Login.this, MainActivity.class);
                                         startActivity(i);
                                         finishAffinity();
+                                    }else if (response.body().getData().getTyp().equals("Ecommerce"))
+                                    {
+                                        Intent i = new Intent(Login.this, MainActivity3.class);
+                                        startActivity(i);
+                                        finishAffinity();
                                     } else {
                                         Intent i = new Intent(Login.this, MainActivity2.class);
                                         startActivity(i);

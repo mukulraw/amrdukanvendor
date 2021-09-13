@@ -54,7 +54,12 @@ public class Splash extends AppCompatActivity {
                         Intent i = new Intent(Splash.this, MainActivity.class);
                         startActivity(i);
                         finishAffinity();
-                    } else {
+                    }else if (type.equals("Ecommerce"))
+                    {
+                        Intent i = new Intent(Splash.this, MainActivity3.class);
+                        startActivity(i);
+                        finishAffinity();
+                    }else {
                         Intent i = new Intent(Splash.this, MainActivity2.class);
                         startActivity(i);
                         finishAffinity();

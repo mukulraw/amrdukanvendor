@@ -10,21 +10,15 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.installations.FirebaseInstallations;
 
-import java.io.IOException;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity3 extends AppCompatActivity {
 
     Toolbar toolbar;
     BottomNavigationView bottom;
@@ -33,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main3);
 
         toolbar = findViewById(R.id.toolbar);
         bottom = findViewById(R.id.bottom);
@@ -57,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         FragmentTransaction ft = fm.beginTransaction();
-                        ShopOrders frag1 = new ShopOrders();
+                        Bills frag1 = new Bills();
                         ft.replace(R.id.replace, frag1);
                         //ft.addToBackStack(null);
                         ft.commit();
@@ -71,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         FragmentTransaction ft1 = fm1.beginTransaction();
-                        FoodOrders frag11 = new FoodOrders();
+                        Bills1 frag11 = new Bills1();
                         ft1.replace(R.id.replace, frag11);
                         //ft.addToBackStack(null);
                         ft1.commit();
@@ -88,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final Dialog dialog = new Dialog(MainActivity.this);
+                final Dialog dialog = new Dialog(MainActivity3.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(false);
                 dialog.setContentView(R.layout.logout_dialog);
@@ -124,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
                         SharePreferenceUtils.getInstance().deletePref();
 
-                        Intent intent = new Intent(MainActivity.this , Splash.class);
+                        Intent intent = new Intent(MainActivity3.this , Splash.class);
                         startActivity(intent);
 
                         finishAffinity();

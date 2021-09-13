@@ -4,9 +4,9 @@ package com.mrtecks.amrdukanvendor;
 import com.mrtecks.amrdukanvendor.driverPOJO.driverBean;
 import com.mrtecks.amrdukanvendor.loginPOJO.loginBean;
 import com.mrtecks.amrdukanvendor.orderDetailsPOJO.orderDetailsBean;
+import com.mrtecks.amrdukanvendor.orders1POJO.orders1Bean;
 import com.mrtecks.amrdukanvendor.ordersPOJO.ordersBean;
 
-import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
@@ -90,6 +90,20 @@ public interface AllApiIneterface {
     @POST("amrdukan/api/cancel_order2.php")
     Call<driverBean> cancel_order2(
             @Part("order_id") String order_id
+    );
+
+    @Multipart
+    @POST("amrdukan/api/getOrders1.php")
+    Call<orders1Bean> getOrders1(
+            @Part("sid") String sid,
+            @Part("date") String date
+    );
+
+    @Multipart
+    @POST("amrdukan/api/getOrders2.php")
+    Call<orders1Bean> getOrders2(
+            @Part("sid") String sid,
+            @Part("date") String date
     );
 
     /*@Multipart
